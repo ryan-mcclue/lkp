@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: zlib-acknowledgement
+#include <cstdint>
+#include <cstdio>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -9,27 +11,34 @@
 #include <xf86drm.h>
 #include <xf86drmMode.h>
 
-#include <cstdint>
+inline void DEBUGGER_BREAK(void) { return; }
+void break_and_log_errno(void)
+{
+  char errno_msg[256] = {0};
+  // TODO(Ryan): With better gnu++20 support, use std::format
+  sprintf(errno_msg, "%m");
+  // IMPORTANT(Ryan): Instruct debugger to break at this function call
+  // and then simply step out to inspect errno_msg in expressions window
+  DEBUGGER_BREAK();
+}
 
 typedef uint64_t u64;
 typedef uint32_t u32;
 
 int
 main(int argc, char* argv[])
-{
-  // For every device the linux kernel detects, it will export obtained information about the device
+{ // NOTE(Ryan): For every device the linux kernel detects, it will export obtained information about the device
   // via sysfs (so, a file is present in /sys/dev/char or sys/dev/block depending on how the driver sends data)
   // It will also send a uevent to the udevd systemd service/daemon whose subsequent action can be configured.
   // In most cases will put in /dev.
-  //
-  // If wanting to be robust, use livudev hotplugging functionality instead of hard coding
+  
+  // TODO(Ryan): Investigate using libudev to avoid hard-coding.
   int drm_fd = open("/dev/dri/card0", O_RDWR | O_CLOEXEC);
   if (drm_fd == -1) {
-    // TODO(Ryan): Logging (%m useful for errno)
-    // could do return -errno;
+    break_and_log_errno();
   }
 
-  
+ /* 
   u64 has_dumb = 0;
   // this means the driver for our card supports simple memory-mapped buffers
   // without the need for us to write driver dependent code
@@ -73,7 +82,7 @@ main(int argc, char* argv[])
   // can have more connectors than CRTCs
 
 
-  
+*/  
 
   return 0;
 }
