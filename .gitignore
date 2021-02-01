@@ -1,0 +1,11 @@
+# SPDX-License-Identifier: zlib-acknowledgement
+
+*
+!*/
+
+!.gitignore
+!README.md
+
+!5.8-build.bash
+
+!5.8-lkp.cpp
