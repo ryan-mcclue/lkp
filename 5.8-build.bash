@@ -9,4 +9,4 @@
 
 [[ ! -d 5.8-build ]] && mkdir 5.8-build
 
-g++ -g 5.8-lkp.cpp -o 5.8-build/5.8-lkp
+g++ -g 5.8-lkp.cpp -o 5.8-build/5.8-lkp -ldrm
